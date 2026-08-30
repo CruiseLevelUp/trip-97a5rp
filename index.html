@@ -107,6 +107,14 @@
   .stop .info a.map{display:inline-block;margin-top:8px;font-size:.82rem;color:var(--blue);
     text-decoration:none;font-weight:600;background:#eaf1f5;padding:4px 12px;border-radius:999px}
   .stop .info a.map:active{background:#dbe7ee}
+  /* 日程附註卡（如浮潛資訊） */
+  .day-note{margin:2px 16px 16px;background:#fbf6ea;border:1px solid #ecdcba;border-radius:14px;padding:14px 16px}
+  .day-note .dn-title{font-weight:700;color:var(--gold-deep);font-size:.98rem;margin-bottom:8px;letter-spacing:.5px}
+  .day-note .dn-item{padding:9px 0;border-top:1px dashed #e7d6b2}
+  .day-note .dn-item:first-of-type{border-top:none}
+  .day-note .dn-h{font-weight:600;font-size:.9rem;margin-bottom:3px;color:var(--coffee)}
+  .day-note .dn-lines{font-size:.84rem;color:#6b5834;line-height:1.75}
+  .day-note .dn-lines a{color:var(--blue);font-weight:600;text-decoration:none}
 
   /* ── 相簿 ── */
   .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(108px,1fr));gap:10px}
@@ -280,7 +288,29 @@ const TRIP = {
     { n:"第二天", stops:[
       { time:"白天", name:"飯店水上活動", desc:"全天主要待在飯店", map:"" },
       { time:"18:00", name:"琉球的牛（晚餐）", desc:"燒肉・恩納", map:"909-2 Maeganeku, Onna, Okinawa 904-0414" },
-    ]},
+    ],
+      note:{ icon:"🤿", title:"浮潛資訊（以官網為主）", items:[
+        { h:"教練帶・體驗浮潛（2 歲起）", lines:[
+          "大人（國中以上）¥7,000 ・ 小孩（2 歲～小學生）¥5,000",
+          "約 2.5 小時，場次 8:50 / 14:20",
+          "集合：幸喜海灘（離飯店約 10 分鐘車程）",
+          "通常含救生衣＋浮潛器材，報名時再與業者確認",
+        ]},
+        { h:"自家海灘 かりゆしビーチ 玩水", lines:[
+          "設施利用料：大人 ¥2,000 ・ 小孩（4～12 歲）¥1,000",
+          "官網優惠期 9/1–10/31：搭配指定活動或陽傘組，設施費可低至 大人 ¥550 ・ 小孩 ¥330",
+          "租借：SUP ¥2,200 ・ 獨木舟 單¥1,100 / 雙¥2,200 ・ 水上腳踏車 ¥2,200 ・ 陽傘組 ¥3,850",
+        ]},
+        { h:"🦺 救生衣", lines:[
+          "官網未列單獨租借價，但海灘備有救生衣（含兒童款）",
+          "是否免費／價格建議打電話確認",
+        ]},
+        { h:"☎️ 建議確認的電話", lines:[
+          "飯店櫃台　<a href='tel:0989678731'>098-967-8731</a>",
+          "かりゆしビーチ　<a href='tel:0980524093'>0980-52-4093</a>（8:30～17:30）",
+        ]},
+      ]},
+    },
     { n:"第三天", stops:[
       { time:"09:00", name:"出門", desc:"", map:"" },
       { time:"上午", name:"古宇利大橋 南端觀景台", desc:"", map:"Sumuide, Nago, Okinawa 905-1635" },
@@ -350,6 +380,13 @@ const TRIP = {
             </div>
           </div>`).join('')}
       </div>
+      ${d.note?`<div class="day-note">
+        <div class="dn-title">${d.note.icon||''} ${d.note.title}</div>
+        ${d.note.items.map(it=>`<div class="dn-item">
+          <div class="dn-h">${it.h}</div>
+          <div class="dn-lines">${it.lines.map(l=>`<div>· ${l}</div>`).join('')}</div>
+        </div>`).join('')}
+      </div>`:''}
     </div>`).join('');
 
   const allStops=[]; TRIP.days.forEach(d=>d.stops.forEach(s=>{if(s.map)allStops.push(s)}));
