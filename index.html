@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>沖繩家庭旅遊 2026</title>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     旅遊網站 — 由 Claude 製作
+     要修改內容，主要改下方兩個地方：
+       1. 下面的 <style> 不用動（除非想改顏色）
+       2. 找 <script id="trip-data"> 區塊 → 改行程、相簿、匯率
+     照片：把圖片檔放進 images/ 資料夾，再到 script 的 album 清單加檔名
+     ═══════════════════════════════════════════════════════════════ -->
+
+<style>
+  :root{
+    --sea:#1a7ea3; --sea-dark:#0d5e7d; --sand:#f6f1e7; --coral:#ef6f5b;
+    --ink:#22333b; --muted:#6b7c85; --card:#ffffff; --line:#e7ddcd;
+    --shadow:0 6px 22px rgba(13,94,125,.12);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+    background:var(--sand); color:var(--ink); line-height:1.65; -webkit-text-size-adjust:100%;
+  }
+  img{max-width:100%;display:block}
+
+  /* ── 頁首 ── */
+  header{
+    background:linear-gradient(135deg,var(--sea) 0%,var(--sea-dark) 100%);
+    color:#fff; padding:34px 20px 26px; text-align:center; position:relative; overflow:hidden;
+  }
+  header::after{content:"🌺";position:absolute;font-size:120px;opacity:.12;right:-10px;bottom:-30px;transform:rotate(-15deg)}
+  header h1{font-size:1.7rem;letter-spacing:1px}
+  header .dates{margin-top:6px;opacity:.92;font-size:.95rem}
+  .countdown{
+    display:inline-block;margin-top:14px;background:rgba(255,255,255,.18);
+    padding:8px 18px;border-radius:999px;font-weight:700;font-size:.95rem;backdrop-filter:blur(4px);
+  }
+
+  /* ── 分頁列 ── */
+  nav{
+    position:sticky;top:0;z-index:50;background:var(--card);
+    display:flex;overflow-x:auto;box-shadow:0 2px 8px rgba(0,0,0,.06);
+    border-bottom:1px solid var(--line);
+  }
+  nav button{
+    flex:1 0 auto;min-width:72px;padding:13px 8px;border:none;background:none;
+    font-size:.9rem;color:var(--muted);cursor:pointer;font-family:inherit;
+    border-bottom:3px solid transparent;transition:.15s;white-space:nowrap;
+  }
+  nav button.active{color:var(--sea);border-bottom-color:var(--sea);font-weight:700}
+
+  main{max-width:820px;margin:0 auto;padding:20px 16px 60px}
+  .tab{display:none;animation:fade .25s ease}
+  .tab.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  h2.section-title{font-size:1.25rem;margin:6px 0 16px;display:flex;align-items:center;gap:8px}
+  .hint{background:#fff6e9;border:1px solid #f0dcb8;color:#8a6d3b;font-size:.82rem;
+    padding:10px 12px;border-radius:10px;margin-bottom:16px}
+
+  /* ── 行程卡 ── */
+  .day{background:var(--card);border-radius:14px;box-shadow:var(--shadow);margin-bottom:16px;overflow:hidden}
+  .day-head{background:var(--sea);color:#fff;padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
+  .day-head .d-num{font-weight:800;font-size:1.05rem}
+  .day-head .d-date{opacity:.9;font-size:.85rem}
+  .day-body{padding:6px 16px 14px}
+  .stop{display:flex;gap:12px;padding:12px 0;border-bottom:1px dashed var(--line)}
+  .stop:last-child{border-bottom:none}
+  .stop .time{flex:0 0 52px;font-weight:700;color:var(--sea-dark);font-size:.88rem;padding-top:2px}
+  .stop .info{flex:1}
+  .stop .info .name{font-weight:600}
+  .stop .info .desc{font-size:.86rem;color:var(--muted);margin-top:2px}
+  .stop .info a.map{display:inline-block;margin-top:6px;font-size:.8rem;color:var(--coral);text-decoration:none;font-weight:600}
+  .stop .info a.map:hover{text-decoration:underline}
+
+  /* ── 相簿 ── */
+  .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
+  .gallery figure{margin:0;border-radius:10px;overflow:hidden;box-shadow:var(--shadow);cursor:pointer;background:#fff}
+  .gallery img{aspect-ratio:1;object-fit:cover;width:100%;transition:.25s}
+  .gallery figure:hover img{transform:scale(1.06)}
+  .gallery figcaption{font-size:.72rem;color:var(--muted);padding:5px 6px;text-align:center}
+  .album-empty{text-align:center;color:var(--muted);padding:40px 12px}
+  /* 燈箱 */
+  #lightbox{position:fixed;inset:0;background:rgba(10,25,32,.92);display:none;z-index:100;
+    align-items:center;justify-content:center;flex-direction:column;padding:20px}
+  #lightbox.on{display:flex}
+  #lightbox img{max-height:78vh;max-width:100%;border-radius:8px}
+  #lightbox .cap{color:#fff;margin-top:12px;font-size:.9rem}
+  #lightbox .close{position:absolute;top:16px;right:20px;color:#fff;font-size:2rem;cursor:pointer;line-height:1}
+  #lightbox .nav-arrow{position:absolute;top:50%;transform:translateY(-50%);color:#fff;font-size:2.4rem;
+    cursor:pointer;padding:0 14px;user-select:none;opacity:.8}
+  #lightbox .prev{left:4px}#lightbox .next{right:4px}
+
+  /* ── 記帳 ── */
+  .card{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:16px;margin-bottom:16px}
+  .row{display:flex;gap:8px;flex-wrap:wrap}
+  .row>*{flex:1;min-width:0}
+  input,select,button.btn{font-family:inherit;font-size:.95rem;padding:10px 12px;border:1px solid var(--line);
+    border-radius:10px;background:#fff;color:var(--ink);width:100%}
+  input:focus,select:focus{outline:2px solid var(--sea);border-color:transparent}
+  button.btn{background:var(--sea);color:#fff;border:none;font-weight:700;cursor:pointer}
+  button.btn:hover{background:var(--sea-dark)}
+  button.btn.coral{background:var(--coral)}
+  .totals{display:flex;justify-content:space-between;align-items:baseline;padding:8px 4px;border-bottom:1px solid var(--line)}
+  .totals.grand{font-size:1.15rem;font-weight:800;color:var(--sea-dark);border:none;padding-top:14px}
+  .exp-item{display:flex;justify-content:space-between;align-items:center;padding:10px 4px;border-bottom:1px dashed var(--line)}
+  .exp-item .meta{font-size:.85rem;color:var(--muted)}
+  .exp-item .amt{font-weight:700}
+  .exp-item .del{color:var(--coral);cursor:pointer;font-size:.8rem;margin-left:10px;flex:0 0 auto}
+  .cat-tag{display:inline-block;font-size:.72rem;padding:1px 8px;border-radius:999px;background:#eef4f6;color:var(--sea-dark);margin-right:6px}
+
+  /* ── 換匯 ── */
+  .conv-big{font-size:2rem;font-weight:800;color:var(--sea-dark);text-align:center;margin:8px 0}
+  .conv-rate{text-align:center;color:var(--muted);font-size:.85rem;margin-bottom:14px}
+  .swap{text-align:center;margin:10px 0}
+  .swap button{background:var(--sand);border:1px solid var(--line);border-radius:999px;padding:6px 16px;cursor:pointer;font-family:inherit}
+
+  footer{text-align:center;color:var(--muted);font-size:.78rem;padding:24px 16px 40px}
+  label.lbl{font-size:.8rem;color:var(--muted);display:block;margin-bottom:4px}
+</style>
+</head>
+<body>
+
+<header>
+  <h1 id="trip-title">🌊 沖繩家庭旅遊</h1>
+  <div class="dates" id="trip-dates">2026 / 08 / 30 – 09 / 03</div>
+  <div class="countdown" id="countdown">出發倒數計算中…</div>
+</header>
+
+<nav>
+  <button class="active" data-tab="itinerary">📅 行程</button>
+  <button data-tab="album">📸 相簿</button>
+  <button data-tab="expense">📝 記帳</button>
+  <button data-tab="convert">💱 換匯</button>
+  <button data-tab="map">🗺️ 地圖</button>
+</nav>
+
+<main>
+  <!-- 行程 -->
+  <section class="tab active" id="itinerary">
+    <h2 class="section-title">📅 每日行程</h2>
+    <div id="days"></div>
+  </section>
+
+  <!-- 相簿 -->
+  <section class="tab" id="album">
+    <h2 class="section-title">📸 旅行相簿</h2>
+    <div class="hint">加照片：把圖片放進 <b>images/</b> 資料夾，再到程式碼最下方的 <b>album</b> 清單加上檔名即可。</div>
+    <div class="gallery" id="gallery"></div>
+  </section>
+
+  <!-- 記帳 -->
+  <section class="tab" id="expense">
+    <h2 class="section-title">📝 旅遊記帳</h2>
+    <div class="hint">資料只存在你這支手機的瀏覽器裡，不會上傳，換裝置看不到。</div>
+    <div class="card">
+      <div class="row" style="margin-bottom:8px">
+        <div style="flex:2"><label class="lbl">項目</label><input id="e-name" placeholder="例：午餐 拉麵"></div>
+        <div><label class="lbl">金額(¥)</label><input id="e-amt" type="number" inputmode="numeric" placeholder="0"></div>
+      </div>
+      <div class="row" style="margin-bottom:12px">
+        <div><label class="lbl">分類</label>
+          <select id="e-cat">
+            <option>餐飲</option><option>交通</option><option>購物</option>
+            <option>門票</option><option>住宿</option><option>雜項</option>
+          </select>
+        </div>
+        <div><label class="lbl">日期</label><input id="e-date" type="date"></div>
+      </div>
+      <button class="btn" onclick="addExpense()">➕ 新增支出</button>
+    </div>
+    <div class="card" id="totals-card"></div>
+    <div class="card"><div id="exp-list"></div></div>
+  </section>
+
+  <!-- 換匯 -->
+  <section class="tab" id="convert">
+    <h2 class="section-title">💱 日幣 ↔ 台幣</h2>
+    <div class="card">
+      <div id="conv-out" class="conv-big">¥1,000 ≈ NT$210</div>
+      <div class="conv-rate" id="conv-rate"></div>
+      <div><label class="lbl" id="conv-in-lbl">輸入日幣金額 (¥)</label>
+        <input id="conv-in" type="number" inputmode="numeric" value="1000" oninput="doConvert()"></div>
+      <div class="swap"><button onclick="swapConvert()">🔄 切換方向</button></div>
+      <div><label class="lbl">匯率（1 台幣 = ? 日幣，可自行修改）</label>
+        <input id="conv-rate-input" type="number" step="0.01" value="4.76" oninput="doConvert()"></div>
+    </div>
+  </section>
+
+  <!-- 地圖 -->
+  <section class="tab" id="map">
+    <h2 class="section-title">🗺️ 景點導航</h2>
+    <div class="hint">點任一地點會直接開啟 Google 地圖導航。</div>
+    <div id="map-list"></div>
+  </section>
+</main>
+
+<!-- 燈箱 -->
+<div id="lightbox">
+  <span class="close" onclick="closeLb()">✕</span>
+  <span class="nav-arrow prev" onclick="stepLb(-1)">‹</span>
+  <span class="nav-arrow next" onclick="stepLb(1)">›</span>
+  <img id="lb-img" src="" alt="">
+  <div class="cap" id="lb-cap"></div>
+</div>
+
+<footer>用 ❤️ 製作 · 資料存在本機瀏覽器 · 家庭專屬</footer>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     ▼▼▼  要改內容就改這一區 trip-data  ▼▼▼
+     ═══════════════════════════════════════════════════════════════ -->
+<script id="trip-data">
+const TRIP = {
+  title: "🌊 沖繩家庭旅遊",
+  dateFrom: "2026-08-30",        // 出發日（倒數用）
+  dateText: "2026 / 08 / 30 – 09 / 03",
+
+  // ── 行程：一天一個 { } ──
+  days: [
+    { n:"Day 1", date:"8/30 (日)", stops:[
+      { time:"14:00", name:"抵達那霸機場", desc:"入境、領行李、取交通卡", map:"那霸機場" },
+      { time:"16:00", name:"飯店 Check-in", desc:"YS Inn 小祿站附近", map:"小祿站" },
+      { time:"18:30", name:"AEON 購物 + 晚餐", desc:"逛超市、採買零食", map:"AEON 那霸" },
+    ]},
+    { n:"Day 2", date:"8/31 (一)", stops:[
+      { time:"09:00", name:"取租車", desc:"OTS 租車中心，記得帶駕照譯本", map:"OTS租車 那霸" },
+      { time:"11:00", name:"古宇利島", desc:"心形岩、海景大橋", map:"古宇利島" },
+      { time:"14:00", name:"美麗海水族館", desc:"必看黑潮之海大水槽", map:"沖繩美麗海水族館" },
+    ]},
+    { n:"Day 3", date:"9/1 (二)", stops:[
+      { time:"10:00", name:"美國村", desc:"摩天輪、海濱、逛街", map:"美國村 沖繩" },
+      { time:"15:00", name:"殘波岬", desc:"燈塔與斷崖海景", map:"殘波岬" },
+    ]},
+    { n:"Day 4", date:"9/2 (三)", stops:[
+      { time:"10:00", name:"首里城", desc:"世界遺產、琉球王國", map:"首里城" },
+      { time:"14:00", name:"國際通", desc:"伴手禮、市場二樓美食", map:"國際通" },
+    ]},
+    { n:"Day 5", date:"9/3 (四)", stops:[
+      { time:"09:00", name:"還車", desc:"加滿油再還車", map:"那霸機場" },
+      { time:"12:00", name:"搭機返台", desc:"預留 2 小時報到", map:"那霸機場" },
+    ]},
+  ],
+
+  // ── 相簿：把照片放進 images/ 後，在這裡加檔名 ──
+  // 例：{ src:"images/day1-lunch.jpg", cap:"Day1 拉麵" },
+  album: [
+    // { src:"images/example.jpg", cap:"範例照片" },
+  ],
+};
+</script>
+
+<!-- ▲▲▲  以下是程式邏輯，通常不用改  ▲▲▲ -->
+<script>
+  // 分頁切換
+  document.querySelectorAll('nav button').forEach(b=>{
+    b.onclick=()=>{
+      document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      document.getElementById(b.dataset.tab).classList.add('active');
+      window.scrollTo({top:0,behavior:'smooth'});
+    };
+  });
+
+  // 頁首
+  document.getElementById('trip-title').textContent = TRIP.title;
+  document.getElementById('trip-dates').textContent = TRIP.dateText;
+  (function(){
+    const diff = Math.ceil((new Date(TRIP.dateFrom) - new Date())/86400000);
+    const el = document.getElementById('countdown');
+    if(diff>0) el.textContent = `✈️ 出發倒數 ${diff} 天`;
+    else if(diff===0) el.textContent = `🎉 就是今天！出發囉`;
+    else el.textContent = `📖 旅程回憶`;
+  })();
+
+  const mapUrl = q => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
+
+  // 行程
+  document.getElementById('days').innerHTML = TRIP.days.map(d=>`
+    <div class="day">
+      <div class="day-head"><span class="d-num">${d.n}</span><span class="d-date">${d.date}</span></div>
+      <div class="day-body">
+        ${d.stops.map(s=>`
+          <div class="stop">
+            <div class="time">${s.time}</div>
+            <div class="info">
+              <div class="name">${s.name}</div>
+              ${s.desc?`<div class="desc">${s.desc}</div>`:''}
+              ${s.map?`<a class="map" href="${mapUrl(s.map)}" target="_blank" rel="noopener">📍 導航到這裡</a>`:''}
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+
+  // 地圖清單
+  const allStops=[]; TRIP.days.forEach(d=>d.stops.forEach(s=>{if(s.map)allStops.push(s)}));
+  document.getElementById('map-list').innerHTML = allStops.map(s=>`
+    <a class="card" style="display:flex;justify-content:space-between;align-items:center;text-decoration:none;color:inherit"
+       href="${mapUrl(s.map)}" target="_blank" rel="noopener">
+      <span><b>${s.name}</b><br><span style="font-size:.82rem;color:var(--muted)">${s.map}</span></span>
+      <span style="color:var(--coral);font-weight:700">導航 ›</span>
+    </a>`).join('');
+
+  // 相簿
+  const gallery=document.getElementById('gallery');
+  if(TRIP.album.length){
+    gallery.innerHTML = TRIP.album.map((p,i)=>`
+      <figure onclick="openLb(${i})">
+        <img src="${p.src}" alt="${p.cap||''}" loading="lazy">
+        ${p.cap?`<figcaption>${p.cap}</figcaption>`:''}
+      </figure>`).join('');
+  } else {
+    gallery.innerHTML = `<div class="album-empty" style="grid-column:1/-1">
+      📷 還沒有照片<br><small>把圖片放進 images/ 資料夾並在程式碼加上檔名就會顯示</small></div>`;
+  }
+  // 燈箱
+  let lbIndex=0;
+  window.openLb=i=>{lbIndex=i;showLb();document.getElementById('lightbox').classList.add('on')};
+  window.closeLb=()=>document.getElementById('lightbox').classList.remove('on');
+  window.stepLb=d=>{lbIndex=(lbIndex+d+TRIP.album.length)%TRIP.album.length;showLb()};
+  function showLb(){const p=TRIP.album[lbIndex];document.getElementById('lb-img').src=p.src;
+    document.getElementById('lb-cap').textContent=p.cap||''}
+  document.getElementById('lightbox').onclick=e=>{if(e.target.id==='lightbox')closeLb()};
+
+  // 記帳（localStorage）
+  const KEY='trip_expenses_v1';
+  const load=()=>JSON.parse(localStorage.getItem(KEY)||'[]');
+  const save=a=>localStorage.setItem(KEY,JSON.stringify(a));
+  document.getElementById('e-date').value=new Date().toISOString().slice(0,10);
+  window.addExpense=()=>{
+    const name=document.getElementById('e-name').value.trim();
+    const amt=parseFloat(document.getElementById('e-amt').value);
+    if(!name||!amt||amt<=0){alert('請填項目和金額');return;}
+    const list=load();
+    list.push({name,amt,cat:document.getElementById('e-cat').value,date:document.getElementById('e-date').value});
+    save(list);
+    document.getElementById('e-name').value='';document.getElementById('e-amt').value='';
+    renderExpenses();
+  };
+  window.delExpense=i=>{const l=load();l.splice(i,1);save(l);renderExpenses();};
+  function renderExpenses(){
+    const list=load();
+    const cats={};let grand=0;
+    list.forEach(e=>{cats[e.cat]=(cats[e.cat]||0)+e.amt;grand+=e.amt;});
+    const rate=parseFloat(document.getElementById('conv-rate-input').value)||4.76;
+    document.getElementById('totals-card').innerHTML =
+      Object.keys(cats).map(c=>`<div class="totals"><span>${c}</span><span>¥${cats[c].toLocaleString()}</span></div>`).join('')
+      + `<div class="totals grand"><span>總計</span><span>¥${grand.toLocaleString()} <small style="color:var(--muted);font-weight:500">≈ NT$${Math.round(grand/rate).toLocaleString()}</small></span></div>`
+      || '<div style="color:var(--muted);text-align:center">尚無支出</div>';
+    if(!list.length)document.getElementById('totals-card').innerHTML='<div style="color:var(--muted);text-align:center">尚無支出</div>';
+    document.getElementById('exp-list').innerHTML = list.length
+      ? list.map((e,i)=>`<div class="exp-item">
+          <div><span class="cat-tag">${e.cat}</span>${e.name}<br><span class="meta">${e.date}</span></div>
+          <div><span class="amt">¥${e.amt.toLocaleString()}</span><span class="del" onclick="delExpense(${i})">刪除</span></div>
+        </div>`).join('')
+      : '<div style="color:var(--muted);text-align:center;padding:10px">還沒有記帳，新增第一筆吧！</div>';
+  }
+  renderExpenses();
+
+  // 換匯
+  let dir='jpy2twd';
+  window.swapConvert=()=>{dir=dir==='jpy2twd'?'twd2jpy':'jpy2twd';
+    document.getElementById('conv-in-lbl').textContent=dir==='jpy2twd'?'輸入日幣金額 (¥)':'輸入台幣金額 (NT$)';
+    doConvert();};
+  window.doConvert=()=>{
+    const rate=parseFloat(document.getElementById('conv-rate-input').value)||4.76;
+    const v=parseFloat(document.getElementById('conv-in').value)||0;
+    const out=document.getElementById('conv-out');
+    if(dir==='jpy2twd') out.textContent=`¥${v.toLocaleString()} ≈ NT$${(v/rate).toLocaleString(undefined,{maximumFractionDigits:0})}`;
+    else out.textContent=`NT$${v.toLocaleString()} ≈ ¥${(v*rate).toLocaleString(undefined,{maximumFractionDigits:0})}`;
+    document.getElementById('conv-rate').textContent=`目前匯率：1 台幣 = ${rate} 日幣（¥100 ≈ NT$${(100/rate).toFixed(1)}）`;
+    renderExpenses();
+  };
+  doConvert();
+</script>
+</body>
+</html>
