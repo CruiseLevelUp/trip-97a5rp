@@ -232,32 +232,33 @@
 <script id="trip-data">
 const TRIP = {
   title: "🌊 沖繩家庭旅遊",
-  dateFrom: "2026-08-30",        // 出發日（倒數用）
-  dateText: "2026 / 08 / 30 – 09 / 03",
+  dateFrom: "2026-08-31",        // 出發日（倒數用）
+  dateText: "2026 / 08 / 31 – 09 / 03",
 
   // ── 行程：一天一個 { } ──
   days: [
-    { n:"Day 1", date:"8/30 (日)", stops:[
-      { time:"14:00", name:"抵達那霸機場", desc:"入境、領行李、取交通卡", map:"那霸機場" },
-      { time:"16:00", name:"飯店 Check-in", desc:"YS Inn 小祿站附近", map:"小祿站" },
-      { time:"18:30", name:"AEON 購物 + 晚餐", desc:"逛超市、採買零食", map:"AEON 那霸" },
+    { n:"Day 1", date:"8/31 (一)", stops:[
+      { time:"上午", name:"OTS 取車 → 瀨長島", desc:"約 13:00 左右離開瀨長島", map:"瀨長島" },
+      { time:"午餐", name:"傑克牛排館", desc:"車停 1 Chome-18-18 Nishi, Naha", map:"1 Chome-7-3 Nishi, Naha, Okinawa 900-0036" },
+      { time:"下午", name:"琉貿百貨", desc:"車停百貨內", map:"琉貿百貨 那霸" },
+      { time:"傍晚", name:"步行逛國際通", desc:"最晚 20:30 前回琉貿百貨取車，之後回飯店", map:"國際通" },
     ]},
-    { n:"Day 2", date:"8/31 (一)", stops:[
-      { time:"09:00", name:"取租車", desc:"OTS 租車中心，記得帶駕照譯本", map:"OTS租車 那霸" },
-      { time:"11:00", name:"古宇利島", desc:"心形岩、海景大橋", map:"古宇利島" },
-      { time:"14:00", name:"美麗海水族館", desc:"必看黑潮之海大水槽", map:"沖繩美麗海水族館" },
+    { n:"Day 2", date:"9/1 (二)", stops:[
+      { time:"白天", name:"飯店水上活動", desc:"全天主要待在飯店", map:"" },
+      { time:"18:00", name:"琉球的牛（晚餐）", desc:"燒肉", map:"909-2 Maeganeku, Onna, Okinawa 904-0414" },
     ]},
-    { n:"Day 3", date:"9/1 (二)", stops:[
-      { time:"10:00", name:"美國村", desc:"摩天輪、海濱、逛街", map:"美國村 沖繩" },
-      { time:"15:00", name:"殘波岬", desc:"燈塔與斷崖海景", map:"殘波岬" },
+    { n:"Day 3", date:"9/2 (三)", stops:[
+      { time:"09:00", name:"出門", desc:"", map:"" },
+      { time:"上午", name:"古宇利大橋 南端觀景台", desc:"", map:"Sumuide, Nago, Okinawa 905-1635" },
+      { time:"上午", name:"古宇利海洋塔", desc:"", map:"538 Kouri, Nakijin, Okinawa 905-0406" },
+      { time:"中午", name:"古宇利蝦蝦飯（午餐）", desc:"", map:"314 Kouri, Nakijin, Okinawa 905-0406" },
+      { time:"下午", name:"備瀨福木林道", desc:"Bise Fukugi Tree Road", map:"389 Bise, Motobu, Okinawa 905-0207" },
+      { time:"晚上", name:"海人料理 海邦丸（晚餐）", desc:"", map:"1421-5 Yamagawa, Motobu, Okinawa 905-0205" },
     ]},
-    { n:"Day 4", date:"9/2 (三)", stops:[
-      { time:"10:00", name:"首里城", desc:"世界遺產、琉球王國", map:"首里城" },
-      { time:"14:00", name:"國際通", desc:"伴手禮、市場二樓美食", map:"國際通" },
-    ]},
-    { n:"Day 5", date:"9/3 (四)", stops:[
-      { time:"09:00", name:"還車", desc:"加滿油再還車", map:"那霸機場" },
-      { time:"12:00", name:"搭機返台", desc:"預留 2 小時報到", map:"那霸機場" },
+    { n:"Day 4", date:"9/3 (四)", stops:[
+      { time:"09:00", name:"Check out 退房", desc:"退房後出發", map:"" },
+      { time:"上午", name:"永旺夢樂城 沖繩來客夢", desc:"AEON MALL Okinawa Rycom", map:"1 Raikamu, Kitanakagusuku, Okinawa 901-2306" },
+      { time:"下午", name:"迪斐世 沖繩那霸店", desc:"逛完之後去還車", map:"4 Chome-1-1 Omoromachi, Naha, Okinawa 900-0006" },
     ]},
   ],
 
