@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#0f3b59">
-<title>沖繩家庭旅遊 2026</title>
+<title>沖繩家庭旅遊</title>
 
 <!-- ═══════════════════════════════════════════════════════════════
      旅遊網站 · 地中海夏日風 · 由 Claude 製作
@@ -52,12 +52,7 @@
   }
   header::after{content:"🍋";position:absolute;font-size:130px;opacity:.10;right:-14px;bottom:-34px;transform:rotate(-12deg)}
   header h1{font-size:1.75rem;font-weight:700;letter-spacing:1.5px;margin-top:6px}
-  header .dates{margin-top:8px;opacity:.9;font-size:.95rem;letter-spacing:2px;font-weight:400}
-  .countdown{
-    display:inline-block;margin-top:16px;background:var(--gold);color:var(--coffee);
-    padding:8px 20px;border-radius:999px;font-weight:600;font-size:.92rem;letter-spacing:.5px;
-    box-shadow:0 4px 12px rgba(219,161,44,.35);
-  }
+  header .dates{margin-top:10px;opacity:.9;font-size:.95rem;letter-spacing:1.5px;font-weight:400}
 
   /* ── 分頁列 ── */
   nav{
@@ -170,8 +165,7 @@
 
 <header>
   <h1 id="trip-title">🌊 沖繩家庭旅遊</h1>
-  <div class="dates" id="trip-dates">2026 / 08 / 30 – 09 / 03</div>
-  <div class="countdown" id="countdown">出發倒數計算中…</div>
+  <div class="dates">🚗 家庭自駕 · 美食 · 海景 🍋</div>
 </header>
 
 <nav>
@@ -257,24 +251,22 @@
 <script id="trip-data">
 const TRIP = {
   title: "🌊 沖繩家庭旅遊",
-  dateFrom: "2026-08-31",        // 出發日（倒數用）
-  dateText: "2026 / 08 / 31 – 09 / 03",
 
-  // ── 旅程資訊（顯示在行程最上方的藍色卡片；不含個人資料） ──
+  // ── 旅程資訊（顯示在行程最上方的藍色卡片；不含個人資料與真實日期） ──
   info: {
-    flightOut: "IT230　桃園 T1 06:50 → 那霸 09:20（8/31）",
-    flightBack:"IT233　那霸 18:40 → 桃園 T1 19:15（9/3）",
+    flightOut: "IT230　桃園 T1 06:50 → 那霸 09:20",
+    flightBack:"IT233　那霸 18:40 → 桃園 T1 19:15",
     hotel:     "Okinawa Kariyushi Beach Resort Ocean Spa",
-    hotelDates:"8/31 入住 · 9/3 退房（恩納）",
+    hotelDates:"第一天入住 · 第四天退房（恩納）",
     hotelMap:  "Okinawa Kariyushi Beach Resort Ocean Spa",
-    car:       "OTS 租車 RA級　8/31 11:30 取車 · 9/3 15:30 還車",
+    car:       "OTS 租車 RA級　第一天 11:30 取車 · 第四天 15:30 還車",
     carNote:   "臨空豐崎營業所（那霸機場）· 免費機場接送",
-    transfer:  "桃園機場接送　去程 8/31 04:20 · 回程 9/3 19:15",
+    transfer:  "桃園機場接送　去程 第一天 04:20 · 回程 第四天 19:15",
   },
 
   // ── 行程：一天一個 { } ──
   days: [
-    { n:"Day 1", date:"8/31 (一)", stops:[
+    { n:"第一天", stops:[
       { time:"04:20", name:"桃園接送出發", desc:"住家 → 桃園機場 第一航廈", map:"桃園國際機場 第一航廈" },
       { time:"06:50", name:"IT230 起飛", desc:"桃園 T1 → 那霸（台灣虎航）", map:"" },
       { time:"09:20", name:"抵達那霸機場", desc:"OKA 沖繩那霸機場，入境、領行李", map:"那霸機場" },
@@ -285,11 +277,11 @@ const TRIP = {
       { time:"傍晚", name:"步行逛國際通", desc:"最晚 20:30 前回琉貿百貨取車", map:"國際通" },
       { time:"晚上", name:"入住飯店", desc:"Okinawa Kariyushi Beach Resort Ocean Spa", map:"Okinawa Kariyushi Beach Resort Ocean Spa" },
     ]},
-    { n:"Day 2", date:"9/1 (二)", stops:[
+    { n:"第二天", stops:[
       { time:"白天", name:"飯店水上活動", desc:"全天主要待在飯店", map:"" },
       { time:"18:00", name:"琉球的牛（晚餐）", desc:"燒肉・恩納", map:"909-2 Maeganeku, Onna, Okinawa 904-0414" },
     ]},
-    { n:"Day 3", date:"9/2 (三)", stops:[
+    { n:"第三天", stops:[
       { time:"09:00", name:"出門", desc:"", map:"" },
       { time:"上午", name:"古宇利大橋 南端觀景台", desc:"", map:"Sumuide, Nago, Okinawa 905-1635" },
       { time:"上午", name:"古宇利海洋塔", desc:"", map:"538 Kouri, Nakijin, Okinawa 905-0406" },
@@ -297,7 +289,7 @@ const TRIP = {
       { time:"下午", name:"備瀨福木林道", desc:"Bise Fukugi Tree Road", map:"389 Bise, Motobu, Okinawa 905-0207" },
       { time:"晚上", name:"海人料理 海邦丸（晚餐）", desc:"", map:"1421-5 Yamagawa, Motobu, Okinawa 905-0205" },
     ]},
-    { n:"Day 4", date:"9/3 (四)", stops:[
+    { n:"第四天", stops:[
       { time:"09:00", name:"Check out 退房", desc:"退房後出發", map:"" },
       { time:"上午", name:"永旺夢樂城 沖繩來客夢", desc:"AEON MALL Okinawa Rycom", map:"1 Raikamu, Kitanakagusuku, Okinawa 901-2306" },
       { time:"下午", name:"迪斐世 沖繩那霸店", desc:"DFS・逛完後前往還車", map:"4 Chome-1-1 Omoromachi, Naha, Okinawa 900-0006" },
@@ -328,14 +320,6 @@ const TRIP = {
   });
 
   document.getElementById('trip-title').textContent = TRIP.title;
-  document.getElementById('trip-dates').textContent = TRIP.dateText;
-  (function(){
-    const diff = Math.ceil((new Date(TRIP.dateFrom) - new Date())/86400000);
-    const el = document.getElementById('countdown');
-    if(diff>0) el.textContent = `✈️ 出發倒數 ${diff} 天`;
-    else if(diff===0) el.textContent = `🎉 就是今天！出發囉`;
-    else el.textContent = `📖 旅程回憶`;
-  })();
 
   const mapUrl = q => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
 
@@ -354,7 +338,7 @@ const TRIP = {
 
   document.getElementById('days').innerHTML = TRIP.days.map(d=>`
     <div class="day">
-      <div class="day-head"><span class="d-num">${d.n}</span><span class="d-date">${d.date}</span></div>
+      <div class="day-head"><span class="d-num">${d.n}</span></div>
       <div class="day-body">
         ${d.stops.map(s=>`
           <div class="stop">
