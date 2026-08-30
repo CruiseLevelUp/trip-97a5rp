@@ -2,125 +2,147 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0f3b59">
 <title>沖繩家庭旅遊 2026</title>
 
 <!-- ═══════════════════════════════════════════════════════════════
-     旅遊網站 — 由 Claude 製作
-     要修改內容，主要改下方兩個地方：
-       1. 下面的 <style> 不用動（除非想改顏色）
-       2. 找 <script id="trip-data"> 區塊 → 改行程、相簿、匯率
-     照片：把圖片檔放進 images/ 資料夾，再到 script 的 album 清單加檔名
+     旅遊網站 · 地中海夏日風 · 由 Claude 製作
+     配色：Yale Blue #0f3b59 / Goldenrod #dba12c / 奶油白 #f4efe6 / Dark Coffee #3e251e
+     字型：Jost（近 Century Gothic）+ Noto Sans TC
+     改內容 → 找 <script id="trip-data">；加照片 → 圖放 images/ 再到 album 加檔名
      ═══════════════════════════════════════════════════════════════ -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
 
 <style>
   :root{
-    --sea:#1a7ea3; --sea-dark:#0d5e7d; --sand:#f6f1e7; --coral:#ef6f5b;
-    --ink:#22333b; --muted:#6b7c85; --card:#ffffff; --line:#e7ddcd;
-    --shadow:0 6px 22px rgba(13,94,125,.12);
+    --blue:#0f3b59;        /* Yale Blue 主色 */
+    --blue-deep:#0a2c44;   /* 深藍 */
+    --steel:#7d929e;       /* Cool Steel 次要 */
+    --cream:#f4efe6;       /* 奶油白 背景 */
+    --cream-card:#fffdf8;  /* 卡片底 */
+    --gold:#dba12c;        /* Goldenrod 強調 */
+    --gold-deep:#b07d16;   /* 深金（白底可讀文字） */
+    --coffee:#3e251e;      /* Dark Coffee 文字 */
+    --line:#e6ddcd;
+    --shadow:0 8px 26px rgba(15,59,89,.13);
+    --safe-t:env(safe-area-inset-top,0px);
+    --safe-b:env(safe-area-inset-bottom,0px);
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{
-    font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
-    background:var(--sand); color:var(--ink); line-height:1.65; -webkit-text-size-adjust:100%;
+    font-family:"Jost","Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+    background:var(--cream); color:var(--coffee); line-height:1.65;
+    -webkit-text-size-adjust:100%; -webkit-font-smoothing:antialiased;
   }
   img{max-width:100%;display:block}
 
-  /* ── 頁首 ── */
+  /* ── 頁首（藍白遮陽棚條紋） ── */
   header{
-    background:linear-gradient(135deg,var(--sea) 0%,var(--sea-dark) 100%);
-    color:#fff; padding:34px 20px 26px; text-align:center; position:relative; overflow:hidden;
+    background:var(--blue); color:var(--cream);
+    padding:calc(30px + var(--safe-t)) 20px 30px; text-align:center; position:relative; overflow:hidden;
   }
-  header::after{content:"🌺";position:absolute;font-size:120px;opacity:.12;right:-10px;bottom:-30px;transform:rotate(-15deg)}
-  header h1{font-size:1.7rem;letter-spacing:1px}
-  header .dates{margin-top:6px;opacity:.92;font-size:.95rem}
+  header::before{ /* 頂端遮陽棚條紋 */
+    content:"";position:absolute;top:0;left:0;right:0;height:16px;
+    background:repeating-linear-gradient(90deg,var(--cream) 0 24px,var(--gold) 24px 48px);opacity:.9;
+  }
+  header::after{content:"🍋";position:absolute;font-size:130px;opacity:.10;right:-14px;bottom:-34px;transform:rotate(-12deg)}
+  header h1{font-size:1.75rem;font-weight:700;letter-spacing:1.5px;margin-top:6px}
+  header .dates{margin-top:8px;opacity:.9;font-size:.95rem;letter-spacing:2px;font-weight:400}
   .countdown{
-    display:inline-block;margin-top:14px;background:rgba(255,255,255,.18);
-    padding:8px 18px;border-radius:999px;font-weight:700;font-size:.95rem;backdrop-filter:blur(4px);
+    display:inline-block;margin-top:16px;background:var(--gold);color:var(--coffee);
+    padding:8px 20px;border-radius:999px;font-weight:600;font-size:.92rem;letter-spacing:.5px;
+    box-shadow:0 4px 12px rgba(219,161,44,.35);
   }
 
   /* ── 分頁列 ── */
   nav{
-    position:sticky;top:0;z-index:50;background:var(--card);
-    display:flex;overflow-x:auto;box-shadow:0 2px 8px rgba(0,0,0,.06);
-    border-bottom:1px solid var(--line);
+    position:sticky;top:0;z-index:50;background:var(--cream-card);
+    display:flex;overflow-x:auto;box-shadow:0 2px 10px rgba(15,59,89,.08);
+    border-bottom:1px solid var(--line);-webkit-overflow-scrolling:touch;
   }
+  nav::-webkit-scrollbar{display:none}
   nav button{
-    flex:1 0 auto;min-width:72px;padding:13px 8px;border:none;background:none;
-    font-size:.9rem;color:var(--muted);cursor:pointer;font-family:inherit;
+    flex:1 0 auto;min-width:76px;padding:14px 10px;border:none;background:none;
+    font-family:inherit;font-size:.92rem;font-weight:500;color:var(--steel);cursor:pointer;
     border-bottom:3px solid transparent;transition:.15s;white-space:nowrap;
   }
-  nav button.active{color:var(--sea);border-bottom-color:var(--sea);font-weight:700}
+  nav button.active{color:var(--blue);border-bottom-color:var(--gold);font-weight:700}
 
-  main{max-width:820px;margin:0 auto;padding:20px 16px 60px}
-  .tab{display:none;animation:fade .25s ease}
+  main{max-width:820px;margin:0 auto;padding:22px 16px calc(60px + var(--safe-b))}
+  .tab{display:none;animation:fade .28s ease}
   .tab.active{display:block}
-  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
-  h2.section-title{font-size:1.25rem;margin:6px 0 16px;display:flex;align-items:center;gap:8px}
-  .hint{background:#fff6e9;border:1px solid #f0dcb8;color:#8a6d3b;font-size:.82rem;
-    padding:10px 12px;border-radius:10px;margin-bottom:16px}
+  h2.section-title{font-size:1.35rem;font-weight:600;letter-spacing:.5px;margin:6px 0 18px;color:var(--blue)}
+  .hint{background:#fbf3e0;border:1px solid #eeddb8;color:#8a6a2e;font-size:.82rem;
+    padding:11px 13px;border-radius:12px;margin-bottom:18px;line-height:1.55}
 
   /* ── 行程卡 ── */
-  .day{background:var(--card);border-radius:14px;box-shadow:var(--shadow);margin-bottom:16px;overflow:hidden}
-  .day-head{background:var(--sea);color:#fff;padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
-  .day-head .d-num{font-weight:800;font-size:1.05rem}
-  .day-head .d-date{opacity:.9;font-size:.85rem}
-  .day-body{padding:6px 16px 14px}
-  .stop{display:flex;gap:12px;padding:12px 0;border-bottom:1px dashed var(--line)}
+  .day{background:var(--cream-card);border-radius:18px;box-shadow:var(--shadow);margin-bottom:18px;overflow:hidden}
+  .day-head{background:var(--blue);color:var(--cream);padding:14px 18px;display:flex;justify-content:space-between;align-items:center;position:relative}
+  .day-head::before{content:"";position:absolute;bottom:0;left:0;right:0;height:4px;
+    background:repeating-linear-gradient(90deg,var(--gold) 0 16px,transparent 16px 32px);opacity:.7}
+  .day-head .d-num{font-weight:700;font-size:1.1rem;letter-spacing:1px}
+  .day-head .d-date{opacity:.9;font-size:.85rem;letter-spacing:.5px}
+  .day-body{padding:8px 18px 16px}
+  .stop{display:flex;gap:14px;padding:14px 0;border-bottom:1px dashed var(--line)}
   .stop:last-child{border-bottom:none}
-  .stop .time{flex:0 0 52px;font-weight:700;color:var(--sea-dark);font-size:.88rem;padding-top:2px}
+  .stop .time{flex:0 0 54px;font-weight:600;color:var(--gold-deep);font-size:.9rem;padding-top:2px}
   .stop .info{flex:1}
-  .stop .info .name{font-weight:600}
-  .stop .info .desc{font-size:.86rem;color:var(--muted);margin-top:2px}
-  .stop .info a.map{display:inline-block;margin-top:6px;font-size:.8rem;color:var(--coral);text-decoration:none;font-weight:600}
-  .stop .info a.map:hover{text-decoration:underline}
+  .stop .info .name{font-weight:600;font-size:1.02rem}
+  .stop .info .desc{font-size:.87rem;color:var(--steel);margin-top:3px}
+  .stop .info a.map{display:inline-block;margin-top:8px;font-size:.82rem;color:var(--blue);
+    text-decoration:none;font-weight:600;background:#eaf1f5;padding:4px 12px;border-radius:999px}
+  .stop .info a.map:active{background:#dbe7ee}
 
   /* ── 相簿 ── */
-  .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
-  .gallery figure{margin:0;border-radius:10px;overflow:hidden;box-shadow:var(--shadow);cursor:pointer;background:#fff}
+  .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(108px,1fr));gap:10px}
+  .gallery figure{margin:0;border-radius:14px;overflow:hidden;box-shadow:var(--shadow);cursor:pointer;background:#fff}
   .gallery img{aspect-ratio:1;object-fit:cover;width:100%;transition:.25s}
-  .gallery figure:hover img{transform:scale(1.06)}
-  .gallery figcaption{font-size:.72rem;color:var(--muted);padding:5px 6px;text-align:center}
-  .album-empty{text-align:center;color:var(--muted);padding:40px 12px}
-  /* 燈箱 */
-  #lightbox{position:fixed;inset:0;background:rgba(10,25,32,.92);display:none;z-index:100;
-    align-items:center;justify-content:center;flex-direction:column;padding:20px}
+  .gallery figure:active img{transform:scale(1.05)}
+  .gallery figcaption{font-size:.74rem;color:var(--steel);padding:6px;text-align:center}
+  .album-empty{text-align:center;color:var(--steel);padding:44px 12px;line-height:1.9}
+  #lightbox{position:fixed;inset:0;background:rgba(10,44,68,.94);display:none;z-index:100;
+    align-items:center;justify-content:center;flex-direction:column;padding:calc(20px + var(--safe-t)) 20px calc(20px + var(--safe-b))}
   #lightbox.on{display:flex}
-  #lightbox img{max-height:78vh;max-width:100%;border-radius:8px}
-  #lightbox .cap{color:#fff;margin-top:12px;font-size:.9rem}
-  #lightbox .close{position:absolute;top:16px;right:20px;color:#fff;font-size:2rem;cursor:pointer;line-height:1}
-  #lightbox .nav-arrow{position:absolute;top:50%;transform:translateY(-50%);color:#fff;font-size:2.4rem;
-    cursor:pointer;padding:0 14px;user-select:none;opacity:.8}
-  #lightbox .prev{left:4px}#lightbox .next{right:4px}
+  #lightbox img{max-height:76vh;max-width:100%;border-radius:10px}
+  #lightbox .cap{color:var(--cream);margin-top:14px;font-size:.92rem;letter-spacing:.5px}
+  #lightbox .close{position:absolute;top:calc(16px + var(--safe-t));right:20px;color:#fff;font-size:2rem;cursor:pointer;line-height:1}
+  #lightbox .nav-arrow{position:absolute;top:50%;transform:translateY(-50%);color:#fff;font-size:2.6rem;cursor:pointer;padding:0 14px;user-select:none;opacity:.85}
+  #lightbox .prev{left:2px}#lightbox .next{right:2px}
 
-  /* ── 記帳 ── */
-  .card{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:16px;margin-bottom:16px}
-  .row{display:flex;gap:8px;flex-wrap:wrap}
+  /* ── 卡片/表單 ── */
+  .card{background:var(--cream-card);border-radius:18px;box-shadow:var(--shadow);padding:18px;margin-bottom:18px}
+  .row{display:flex;gap:10px;flex-wrap:wrap}
   .row>*{flex:1;min-width:0}
-  input,select,button.btn{font-family:inherit;font-size:.95rem;padding:10px 12px;border:1px solid var(--line);
-    border-radius:10px;background:#fff;color:var(--ink);width:100%}
-  input:focus,select:focus{outline:2px solid var(--sea);border-color:transparent}
-  button.btn{background:var(--sea);color:#fff;border:none;font-weight:700;cursor:pointer}
-  button.btn:hover{background:var(--sea-dark)}
-  button.btn.coral{background:var(--coral)}
-  .totals{display:flex;justify-content:space-between;align-items:baseline;padding:8px 4px;border-bottom:1px solid var(--line)}
-  .totals.grand{font-size:1.15rem;font-weight:800;color:var(--sea-dark);border:none;padding-top:14px}
-  .exp-item{display:flex;justify-content:space-between;align-items:center;padding:10px 4px;border-bottom:1px dashed var(--line)}
-  .exp-item .meta{font-size:.85rem;color:var(--muted)}
+  input,select,button.btn{font-family:inherit;font-size:1rem;padding:12px 14px;border:1.5px solid var(--line);
+    border-radius:12px;background:#fff;color:var(--coffee);width:100%}
+  input:focus,select:focus{outline:none;border-color:var(--gold)}
+  button.btn{background:var(--gold);color:var(--coffee);border:none;font-weight:700;font-size:1.02rem;cursor:pointer;letter-spacing:.5px}
+  button.btn:active{background:var(--gold-deep);color:#fff}
+  .totals{display:flex;justify-content:space-between;align-items:baseline;padding:9px 4px;border-bottom:1px solid var(--line)}
+  .totals.grand{font-size:1.2rem;font-weight:700;color:var(--blue);border:none;padding-top:14px}
+  .exp-item{display:flex;justify-content:space-between;align-items:center;padding:11px 4px;border-bottom:1px dashed var(--line)}
+  .exp-item .meta{font-size:.85rem;color:var(--steel)}
   .exp-item .amt{font-weight:700}
-  .exp-item .del{color:var(--coral);cursor:pointer;font-size:.8rem;margin-left:10px;flex:0 0 auto}
-  .cat-tag{display:inline-block;font-size:.72rem;padding:1px 8px;border-radius:999px;background:#eef4f6;color:var(--sea-dark);margin-right:6px}
+  .exp-item .del{color:#b0553f;cursor:pointer;font-size:.8rem;margin-left:12px;flex:0 0 auto}
+  .cat-tag{display:inline-block;font-size:.72rem;padding:2px 9px;border-radius:999px;background:#eaf1f5;color:var(--blue);margin-right:6px;font-weight:500}
 
   /* ── 換匯 ── */
-  .conv-big{font-size:2rem;font-weight:800;color:var(--sea-dark);text-align:center;margin:8px 0}
-  .conv-rate{text-align:center;color:var(--muted);font-size:.85rem;margin-bottom:14px}
-  .swap{text-align:center;margin:10px 0}
-  .swap button{background:var(--sand);border:1px solid var(--line);border-radius:999px;padding:6px 16px;cursor:pointer;font-family:inherit}
+  .conv-big{font-size:2.1rem;font-weight:700;color:var(--blue);text-align:center;margin:8px 0;letter-spacing:.5px}
+  .conv-rate{text-align:center;color:var(--steel);font-size:.85rem;margin-bottom:16px}
+  .swap{text-align:center;margin:12px 0}
+  .swap button{background:var(--cream);border:1.5px solid var(--line);border-radius:999px;padding:8px 18px;cursor:pointer;font-family:inherit;font-size:.92rem;color:var(--coffee)}
+  .swap button:active{background:#ece3d2}
 
-  footer{text-align:center;color:var(--muted);font-size:.78rem;padding:24px 16px 40px}
-  label.lbl{font-size:.8rem;color:var(--muted);display:block;margin-bottom:4px}
+  footer{text-align:center;color:var(--steel);font-size:.78rem;padding:24px 16px calc(40px + var(--safe-b));letter-spacing:.5px}
+  label.lbl{font-size:.8rem;color:var(--steel);display:block;margin-bottom:5px;font-weight:500}
+  a.card{text-decoration:none;color:inherit}
 </style>
 </head>
 <body>
@@ -140,29 +162,26 @@
 </nav>
 
 <main>
-  <!-- 行程 -->
   <section class="tab active" id="itinerary">
     <h2 class="section-title">📅 每日行程</h2>
     <div id="days"></div>
   </section>
 
-  <!-- 相簿 -->
   <section class="tab" id="album">
     <h2 class="section-title">📸 旅行相簿</h2>
     <div class="hint">加照片：把圖片放進 <b>images/</b> 資料夾，再到程式碼最下方的 <b>album</b> 清單加上檔名即可。</div>
     <div class="gallery" id="gallery"></div>
   </section>
 
-  <!-- 記帳 -->
   <section class="tab" id="expense">
     <h2 class="section-title">📝 旅遊記帳</h2>
     <div class="hint">資料只存在你這支手機的瀏覽器裡，不會上傳，換裝置看不到。</div>
     <div class="card">
-      <div class="row" style="margin-bottom:8px">
+      <div class="row" style="margin-bottom:10px">
         <div style="flex:2"><label class="lbl">項目</label><input id="e-name" placeholder="例：午餐 拉麵"></div>
         <div><label class="lbl">金額(¥)</label><input id="e-amt" type="number" inputmode="numeric" placeholder="0"></div>
       </div>
-      <div class="row" style="margin-bottom:12px">
+      <div class="row" style="margin-bottom:14px">
         <div><label class="lbl">分類</label>
           <select id="e-cat">
             <option>餐飲</option><option>交通</option><option>購物</option>
@@ -177,7 +196,6 @@
     <div class="card"><div id="exp-list"></div></div>
   </section>
 
-  <!-- 換匯 -->
   <section class="tab" id="convert">
     <h2 class="section-title">💱 日幣 ↔ 台幣</h2>
     <div class="card">
@@ -191,7 +209,6 @@
     </div>
   </section>
 
-  <!-- 地圖 -->
   <section class="tab" id="map">
     <h2 class="section-title">🗺️ 景點導航</h2>
     <div class="hint">點任一地點會直接開啟 Google 地圖導航。</div>
@@ -199,7 +216,6 @@
   </section>
 </main>
 
-<!-- 燈箱 -->
 <div id="lightbox">
   <span class="close" onclick="closeLb()">✕</span>
   <span class="nav-arrow prev" onclick="stepLb(-1)">‹</span>
@@ -208,7 +224,7 @@
   <div class="cap" id="lb-cap"></div>
 </div>
 
-<footer>用 ❤️ 製作 · 資料存在本機瀏覽器 · 家庭專屬</footer>
+<footer>用 🍋 製作 · 資料存在本機瀏覽器 · 家庭專屬</footer>
 
 <!-- ═══════════════════════════════════════════════════════════════
      ▼▼▼  要改內容就改這一區 trip-data  ▼▼▼
@@ -255,7 +271,6 @@ const TRIP = {
 
 <!-- ▲▲▲  以下是程式邏輯，通常不用改  ▲▲▲ -->
 <script>
-  // 分頁切換
   document.querySelectorAll('nav button').forEach(b=>{
     b.onclick=()=>{
       document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
@@ -266,7 +281,6 @@ const TRIP = {
     };
   });
 
-  // 頁首
   document.getElementById('trip-title').textContent = TRIP.title;
   document.getElementById('trip-dates').textContent = TRIP.dateText;
   (function(){
@@ -279,7 +293,6 @@ const TRIP = {
 
   const mapUrl = q => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
 
-  // 行程
   document.getElementById('days').innerHTML = TRIP.days.map(d=>`
     <div class="day">
       <div class="day-head"><span class="d-num">${d.n}</span><span class="d-date">${d.date}</span></div>
@@ -296,16 +309,14 @@ const TRIP = {
       </div>
     </div>`).join('');
 
-  // 地圖清單
   const allStops=[]; TRIP.days.forEach(d=>d.stops.forEach(s=>{if(s.map)allStops.push(s)}));
   document.getElementById('map-list').innerHTML = allStops.map(s=>`
-    <a class="card" style="display:flex;justify-content:space-between;align-items:center;text-decoration:none;color:inherit"
+    <a class="card" style="display:flex;justify-content:space-between;align-items:center"
        href="${mapUrl(s.map)}" target="_blank" rel="noopener">
-      <span><b>${s.name}</b><br><span style="font-size:.82rem;color:var(--muted)">${s.map}</span></span>
-      <span style="color:var(--coral);font-weight:700">導航 ›</span>
+      <span><b>${s.name}</b><br><span style="font-size:.82rem;color:var(--steel)">${s.map}</span></span>
+      <span style="color:var(--gold-deep);font-weight:700">導航 ›</span>
     </a>`).join('');
 
-  // 相簿
   const gallery=document.getElementById('gallery');
   if(TRIP.album.length){
     gallery.innerHTML = TRIP.album.map((p,i)=>`
@@ -317,7 +328,6 @@ const TRIP = {
     gallery.innerHTML = `<div class="album-empty" style="grid-column:1/-1">
       📷 還沒有照片<br><small>把圖片放進 images/ 資料夾並在程式碼加上檔名就會顯示</small></div>`;
   }
-  // 燈箱
   let lbIndex=0;
   window.openLb=i=>{lbIndex=i;showLb();document.getElementById('lightbox').classList.add('on')};
   window.closeLb=()=>document.getElementById('lightbox').classList.remove('on');
@@ -326,7 +336,6 @@ const TRIP = {
     document.getElementById('lb-cap').textContent=p.cap||''}
   document.getElementById('lightbox').onclick=e=>{if(e.target.id==='lightbox')closeLb()};
 
-  // 記帳（localStorage）
   const KEY='trip_expenses_v1';
   const load=()=>JSON.parse(localStorage.getItem(KEY)||'[]');
   const save=a=>localStorage.setItem(KEY,JSON.stringify(a));
@@ -347,21 +356,21 @@ const TRIP = {
     const cats={};let grand=0;
     list.forEach(e=>{cats[e.cat]=(cats[e.cat]||0)+e.amt;grand+=e.amt;});
     const rate=parseFloat(document.getElementById('conv-rate-input').value)||4.76;
-    document.getElementById('totals-card').innerHTML =
-      Object.keys(cats).map(c=>`<div class="totals"><span>${c}</span><span>¥${cats[c].toLocaleString()}</span></div>`).join('')
-      + `<div class="totals grand"><span>總計</span><span>¥${grand.toLocaleString()} <small style="color:var(--muted);font-weight:500">≈ NT$${Math.round(grand/rate).toLocaleString()}</small></span></div>`
-      || '<div style="color:var(--muted);text-align:center">尚無支出</div>';
-    if(!list.length)document.getElementById('totals-card').innerHTML='<div style="color:var(--muted);text-align:center">尚無支出</div>';
+    if(!list.length){document.getElementById('totals-card').innerHTML='<div style="color:var(--steel);text-align:center">尚無支出</div>';}
+    else{
+      document.getElementById('totals-card').innerHTML =
+        Object.keys(cats).map(c=>`<div class="totals"><span>${c}</span><span>¥${cats[c].toLocaleString()}</span></div>`).join('')
+        + `<div class="totals grand"><span>總計</span><span>¥${grand.toLocaleString()} <small style="color:var(--steel);font-weight:500">≈ NT$${Math.round(grand/rate).toLocaleString()}</small></span></div>`;
+    }
     document.getElementById('exp-list').innerHTML = list.length
       ? list.map((e,i)=>`<div class="exp-item">
           <div><span class="cat-tag">${e.cat}</span>${e.name}<br><span class="meta">${e.date}</span></div>
           <div><span class="amt">¥${e.amt.toLocaleString()}</span><span class="del" onclick="delExpense(${i})">刪除</span></div>
         </div>`).join('')
-      : '<div style="color:var(--muted);text-align:center;padding:10px">還沒有記帳，新增第一筆吧！</div>';
+      : '<div style="color:var(--steel);text-align:center;padding:10px">還沒有記帳，新增第一筆吧！</div>';
   }
   renderExpenses();
 
-  // 換匯
   let dir='jpy2twd';
   window.swapConvert=()=>{dir=dir==='jpy2twd'?'twd2jpy':'jpy2twd';
     document.getElementById('conv-in-lbl').textContent=dir==='jpy2twd'?'輸入日幣金額 (¥)':'輸入台幣金額 (NT$)';
