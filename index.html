@@ -79,6 +79,19 @@
   @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
   h2.section-title{font-size:1.35rem;font-weight:600;letter-spacing:.5px;margin:6px 0 18px;color:var(--blue)}
+
+  /* ── 旅程資訊卡 ── */
+  .info-card{background:linear-gradient(135deg,var(--blue),var(--blue-deep));color:var(--cream);
+    border-radius:18px;padding:16px 18px 14px;margin-bottom:22px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .info-card::before{content:"";position:absolute;top:0;left:0;right:0;height:5px;
+    background:repeating-linear-gradient(90deg,var(--gold) 0 14px,transparent 14px 28px);opacity:.8}
+  .info-card .info-title{font-weight:700;font-size:1.02rem;letter-spacing:1px;margin-bottom:8px;padding-top:4px}
+  .info-card .info-row{display:flex;gap:11px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.13);font-size:.9rem;line-height:1.5}
+  .info-card .info-row:last-child{border-bottom:none}
+  .info-card .ic{flex:0 0 auto;font-size:1.05rem;line-height:1.4}
+  .info-card b{color:var(--gold);font-weight:600;margin-right:5px}
+  .info-card .sub{color:#c3d2da;font-size:.82rem}
+  .info-card a.imap{color:var(--gold);text-decoration:none;font-weight:600;font-size:.8rem;white-space:nowrap}
   .hint{background:#fbf3e0;border:1px solid #eeddb8;color:#8a6a2e;font-size:.82rem;
     padding:11px 13px;border-radius:12px;margin-bottom:18px;line-height:1.55}
 
@@ -164,6 +177,7 @@
 <main>
   <section class="tab active" id="itinerary">
     <h2 class="section-title">📅 每日行程</h2>
+    <div id="trip-info"></div>
     <div id="days"></div>
   </section>
 
@@ -235,17 +249,34 @@ const TRIP = {
   dateFrom: "2026-08-31",        // 出發日（倒數用）
   dateText: "2026 / 08 / 31 – 09 / 03",
 
+  // ── 旅程資訊（顯示在行程最上方的藍色卡片；不含個人資料） ──
+  info: {
+    flightOut: "IT230　桃園 T1 06:50 → 那霸 09:20（8/31）",
+    flightBack:"IT233　那霸 18:40 → 桃園 T1 19:15（9/3）",
+    hotel:     "Okinawa Kariyushi Beach Resort Ocean Spa",
+    hotelDates:"8/31 入住 · 9/3 退房（恩納）",
+    hotelMap:  "Okinawa Kariyushi Beach Resort Ocean Spa",
+    car:       "OTS 租車 RA級　8/31 11:30 取車 · 9/3 15:30 還車",
+    carNote:   "臨空豐崎營業所（那霸機場）· 免費機場接送",
+    transfer:  "桃園機場接送　去程 8/31 04:20 · 回程 9/3 19:15",
+  },
+
   // ── 行程：一天一個 { } ──
   days: [
     { n:"Day 1", date:"8/31 (一)", stops:[
-      { time:"上午", name:"OTS 取車 → 瀨長島", desc:"約 13:00 左右離開瀨長島", map:"瀨長島" },
+      { time:"04:20", name:"桃園接送出發", desc:"住家 → 桃園機場 第一航廈", map:"桃園國際機場 第一航廈" },
+      { time:"06:50", name:"IT230 起飛", desc:"桃園 T1 → 那霸（台灣虎航）", map:"" },
+      { time:"09:20", name:"抵達那霸機場", desc:"OKA 沖繩那霸機場，入境、領行李", map:"那霸機場" },
+      { time:"11:30", name:"OTS 取車", desc:"臨空豐崎營業所・免費機場接送・RA級", map:"OTS RENT-A-CAR 臨空豐崎営業所" },
+      { time:"午後", name:"瀨長島", desc:"約 13:00 左右離開瀨長島", map:"瀨長島" },
       { time:"午餐", name:"傑克牛排館", desc:"車停 1 Chome-18-18 Nishi, Naha", map:"1 Chome-7-3 Nishi, Naha, Okinawa 900-0036" },
       { time:"下午", name:"琉貿百貨", desc:"車停百貨內", map:"琉貿百貨 那霸" },
-      { time:"傍晚", name:"步行逛國際通", desc:"最晚 20:30 前回琉貿百貨取車，之後回飯店", map:"國際通" },
+      { time:"傍晚", name:"步行逛國際通", desc:"最晚 20:30 前回琉貿百貨取車", map:"國際通" },
+      { time:"晚上", name:"入住飯店", desc:"Okinawa Kariyushi Beach Resort Ocean Spa", map:"Okinawa Kariyushi Beach Resort Ocean Spa" },
     ]},
     { n:"Day 2", date:"9/1 (二)", stops:[
       { time:"白天", name:"飯店水上活動", desc:"全天主要待在飯店", map:"" },
-      { time:"18:00", name:"琉球的牛（晚餐）", desc:"燒肉", map:"909-2 Maeganeku, Onna, Okinawa 904-0414" },
+      { time:"18:00", name:"琉球的牛（晚餐）", desc:"燒肉・恩納", map:"909-2 Maeganeku, Onna, Okinawa 904-0414" },
     ]},
     { n:"Day 3", date:"9/2 (三)", stops:[
       { time:"09:00", name:"出門", desc:"", map:"" },
@@ -258,7 +289,10 @@ const TRIP = {
     { n:"Day 4", date:"9/3 (四)", stops:[
       { time:"09:00", name:"Check out 退房", desc:"退房後出發", map:"" },
       { time:"上午", name:"永旺夢樂城 沖繩來客夢", desc:"AEON MALL Okinawa Rycom", map:"1 Raikamu, Kitanakagusuku, Okinawa 901-2306" },
-      { time:"下午", name:"迪斐世 沖繩那霸店", desc:"逛完之後去還車", map:"4 Chome-1-1 Omoromachi, Naha, Okinawa 900-0006" },
+      { time:"下午", name:"迪斐世 沖繩那霸店", desc:"DFS・逛完後前往還車", map:"4 Chome-1-1 Omoromachi, Naha, Okinawa 900-0006" },
+      { time:"15:30", name:"OTS 還車", desc:"臨空豐崎營業所（那霸機場）", map:"OTS RENT-A-CAR 臨空豐崎営業所" },
+      { time:"18:40", name:"IT233 起飛", desc:"那霸 → 桃園 T1（台灣虎航）", map:"" },
+      { time:"19:15", name:"抵達桃園・接送返家", desc:"桃園機場 T1 → 住家", map:"" },
     ]},
   ],
 
@@ -293,6 +327,19 @@ const TRIP = {
   })();
 
   const mapUrl = q => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
+
+  if(TRIP.info){
+    const I=TRIP.info;
+    document.getElementById('trip-info').innerHTML = `
+      <div class="info-card">
+        <div class="info-title">🧳 旅程資訊</div>
+        <div class="info-row"><span class="ic">✈️</span><div><b>去程</b>${I.flightOut}</div></div>
+        <div class="info-row"><span class="ic">🛬</span><div><b>回程</b>${I.flightBack}</div></div>
+        <div class="info-row"><span class="ic">🏨</span><div><b>飯店</b>${I.hotel}<br><span class="sub">${I.hotelDates}</span> ${I.hotelMap?`<a class="imap" href="${mapUrl(I.hotelMap)}" target="_blank" rel="noopener">📍導航</a>`:''}</div></div>
+        <div class="info-row"><span class="ic">🚗</span><div><b>租車</b>${I.car}<br><span class="sub">${I.carNote}</span></div></div>
+        <div class="info-row"><span class="ic">🚐</span><div><b>接送</b>${I.transfer}</div></div>
+      </div>`;
+  }
 
   document.getElementById('days').innerHTML = TRIP.days.map(d=>`
     <div class="day">
