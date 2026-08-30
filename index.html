@@ -115,10 +115,18 @@
 
   /* ── 相簿 ── */
   .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(108px,1fr));gap:10px}
-  .gallery figure{margin:0;border-radius:14px;overflow:hidden;box-shadow:var(--shadow);cursor:pointer;background:#fff}
-  .gallery img{aspect-ratio:1;object-fit:cover;width:100%;transition:.25s}
+  .gallery figure{position:relative;margin:0;border-radius:14px;overflow:hidden;box-shadow:var(--shadow);background:#fff}
+  .gallery img{aspect-ratio:1;object-fit:cover;width:100%;transition:.25s;cursor:pointer}
   .gallery figure:active img{transform:scale(1.05)}
   .gallery figcaption{font-size:.74rem;color:var(--steel);padding:6px;text-align:center}
+  .ph-del{position:absolute;top:5px;right:5px;width:26px;height:26px;border-radius:50%;border:none;
+    background:rgba(10,44,68,.6);color:#fff;font-size:.9rem;line-height:1;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;padding:0}
+  .ph-del:active{background:rgba(176,85,63,.9)}
+  .ph-badge{position:absolute;bottom:5px;left:5px;background:rgba(15,59,89,.82);color:var(--cream);
+    font-size:.62rem;padding:2px 7px;border-radius:999px;letter-spacing:.5px}
+  .add-photo-btn{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:14px}
+  #photo-status{text-align:center;color:var(--steel);font-size:.86rem;margin-bottom:14px;display:none}
   .album-empty{text-align:center;color:var(--steel);padding:44px 12px;line-height:1.9}
   #lightbox{position:fixed;inset:0;background:rgba(10,44,68,.94);display:none;z-index:100;
     align-items:center;justify-content:center;flex-direction:column;padding:calc(20px + var(--safe-t)) 20px calc(20px + var(--safe-b))}
@@ -183,7 +191,10 @@
 
   <section class="tab" id="album">
     <h2 class="section-title">📸 旅行相簿</h2>
-    <div class="hint">加照片：把圖片放進 <b>images/</b> 資料夾，再到程式碼最下方的 <b>album</b> 清單加上檔名即可。</div>
+    <div class="hint">📱 按下方按鈕就能從手機選照片。照片存在<b>「這支手機」</b>裡（只有你自己看得到，換手機／換人看不到）。想讓<b>全家都看到</b>，把照片用 Discord 傳給我放進共享相簿。</div>
+    <input id="photo-input" type="file" accept="image/*" multiple style="display:none">
+    <button class="btn add-photo-btn" onclick="document.getElementById('photo-input').click()">📷 從手機選照片</button>
+    <div id="photo-status">處理中…</div>
     <div class="gallery" id="gallery"></div>
   </section>
 
@@ -365,24 +376,107 @@ const TRIP = {
       <span style="color:var(--gold-deep);font-weight:700">導航 ›</span>
     </a>`).join('');
 
+  // ===== 相簿：共享照片(TRIP.album) + 本機照片(存 IndexedDB，僅本機可見) =====
   const gallery=document.getElementById('gallery');
-  if(TRIP.album.length){
-    gallery.innerHTML = TRIP.album.map((p,i)=>`
-      <figure onclick="openLb(${i})">
-        <img src="${p.src}" alt="${p.cap||''}" loading="lazy">
-        ${p.cap?`<figcaption>${p.cap}</figcaption>`:''}
-      </figure>`).join('');
-  } else {
-    gallery.innerHTML = `<div class="album-empty" style="grid-column:1/-1">
-      📷 還沒有照片<br><small>把圖片放進 images/ 資料夾並在程式碼加上檔名就會顯示</small></div>`;
+  const statusEl=document.getElementById('photo-status');
+  let localPhotos=[];  // {id, url, cap}
+
+  // --- IndexedDB 小工具 ---
+  function openDB(){return new Promise((res,rej)=>{
+    const r=indexedDB.open('tripPhotos',1);
+    r.onupgradeneeded=()=>r.result.createObjectStore('photos',{keyPath:'id',autoIncrement:true});
+    r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error);
+  });}
+  async function dbAdd(blob){const db=await openDB();return new Promise((res,rej)=>{
+    const rq=db.transaction('photos','readwrite').objectStore('photos').add({blob,cap:'',ts:Date.now()});
+    rq.onsuccess=()=>res(rq.result); rq.onerror=()=>rej(rq.error);
+  });}
+  async function dbAll(){const db=await openDB();return new Promise((res,rej)=>{
+    const rq=db.transaction('photos','readonly').objectStore('photos').getAll();
+    rq.onsuccess=()=>res(rq.result||[]); rq.onerror=()=>rej(rq.error);
+  });}
+  async function dbDel(id){const db=await openDB();return new Promise((res,rej)=>{
+    const rq=db.transaction('photos','readwrite').objectStore('photos').delete(id);
+    rq.onsuccess=()=>res(); rq.onerror=()=>rej(rq.error);
+  });}
+
+  const allPhotos=()=>[...TRIP.album, ...localPhotos.map(p=>({src:p.url,cap:p.cap}))];
+
+  async function loadLocal(){
+    localPhotos.forEach(p=>URL.revokeObjectURL(p.url));
+    let rows=[]; try{ rows=await dbAll(); }catch(e){ rows=[]; }
+    localPhotos=rows.map(r=>({id:r.id,url:URL.createObjectURL(r.blob),cap:r.cap||''}));
+    renderGallery();
   }
+
+  function renderGallery(){
+    const repoN=TRIP.album.length, all=allPhotos();
+    if(!all.length){
+      gallery.innerHTML=`<div class="album-empty" style="grid-column:1/-1">📷 還沒有照片<br><small>按上面的按鈕從手機選照片</small></div>`;
+      return;
+    }
+    gallery.innerHTML=all.map((p,i)=>{
+      const isLocal=i>=repoN;
+      return `<figure>
+        <img src="${p.src}" alt="${p.cap||''}" loading="lazy" onclick="openLb(${i})">
+        ${isLocal?`<button class="ph-del" onclick="delLocal(${i-repoN})" aria-label="刪除">✕</button><span class="ph-badge">本機</span>`:''}
+        ${p.cap?`<figcaption>${p.cap}</figcaption>`:''}
+      </figure>`;
+    }).join('');
+  }
+
+  window.delLocal=async idx=>{ const p=localPhotos[idx]; if(!p)return;
+    if(!confirm('要從這支手機移除這張照片嗎？')) return;
+    try{ await dbDel(p.id); }catch(e){}
+    await loadLocal();
+  };
+
+  // 選照片 → 壓縮 → 存 IndexedDB
+  const input=document.getElementById('photo-input');
+  input.onchange=async e=>{
+    const files=[...e.target.files]; if(!files.length) return;
+    statusEl.style.display='block';
+    for(let n=0;n<files.length;n++){
+      statusEl.textContent=`處理中… ${n+1}/${files.length}`;
+      try{ const blob=await compress(files[n]); await dbAdd(blob); }
+      catch(err){
+        if(/quota|Quota|space|QUOTA/.test(String(err&&err.name)+String(err))){
+          alert('這支手機的照片儲存空間已滿，無法再存更多。\n想全家共享的照片，可用 Discord 傳給我放進共享相簿。');
+          break;
+        }
+      }
+    }
+    statusEl.style.display='none'; input.value='';
+    await loadLocal();
+  };
+
+  // 用 canvas 壓縮（最長邊 1400px，JPEG 0.78）大幅縮小 iPhone 大照片
+  function compress(file){
+    return new Promise((resolve,reject)=>{
+      const img=new Image(), url=URL.createObjectURL(file);
+      img.onload=()=>{ URL.revokeObjectURL(url);
+        const max=1400; let w=img.width,h=img.height;
+        if(w>h && w>max){ h=Math.round(h*max/w); w=max; }
+        else if(h>=w && h>max){ w=Math.round(w*max/h); h=max; }
+        const cv=document.createElement('canvas'); cv.width=w; cv.height=h;
+        cv.getContext('2d').drawImage(img,0,0,w,h);
+        cv.toBlob(b=> b?resolve(b):reject(new Error('blob-fail')), 'image/jpeg', 0.78);
+      };
+      img.onerror=()=>{ URL.revokeObjectURL(url); reject(new Error('img-fail')); };
+      img.src=url;
+    });
+  }
+
+  // 燈箱（涵蓋共享 + 本機照片）
   let lbIndex=0;
   window.openLb=i=>{lbIndex=i;showLb();document.getElementById('lightbox').classList.add('on')};
   window.closeLb=()=>document.getElementById('lightbox').classList.remove('on');
-  window.stepLb=d=>{lbIndex=(lbIndex+d+TRIP.album.length)%TRIP.album.length;showLb()};
-  function showLb(){const p=TRIP.album[lbIndex];document.getElementById('lb-img').src=p.src;
-    document.getElementById('lb-cap').textContent=p.cap||''}
+  window.stepLb=d=>{const a=allPhotos(); if(!a.length)return; lbIndex=(lbIndex+d+a.length)%a.length; showLb();};
+  function showLb(){const p=allPhotos()[lbIndex]; if(!p)return;
+    document.getElementById('lb-img').src=p.src; document.getElementById('lb-cap').textContent=p.cap||'';}
   document.getElementById('lightbox').onclick=e=>{if(e.target.id==='lightbox')closeLb()};
+
+  loadLocal();
 
   const KEY='trip_expenses_v1';
   const load=()=>JSON.parse(localStorage.getItem(KEY)||'[]');
